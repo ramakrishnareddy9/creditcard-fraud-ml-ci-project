@@ -4,7 +4,7 @@ import sys
 from pathlib import Path
 
 MINIMUM_ACCURACY = 0.85
-METRICS_FILE = Path("metrics.json")
+METRICS_FILE = Path("artifacts/metrics.json")
 
 
 def main():
@@ -12,7 +12,7 @@ def main():
 
     if not METRICS_FILE.exists():
         print("QUALITY GATE FAILED")
-        print("metrics.json was not found.")
+        print(f"Metrics file not found: {METRICS_FILE}")
         sys.exit(1)
 
     try:
