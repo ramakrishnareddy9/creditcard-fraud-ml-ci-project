@@ -1,4 +1,3 @@
-
 name: Credit Card Fraud Detection ML CI
 
 on:
@@ -39,7 +38,10 @@ jobs:
         run: python quality_gate.py
 
       - name: Run automated ML tests
-        run: python -m unittest discover -v
+        run: python -m unittest test_ml_pipeline -v
+
+      - name: Run prediction API tests
+        run: python -m unittest test_app -v
 
       - name: Upload model, metrics and plots
         if: always()
@@ -48,6 +50,7 @@ jobs:
           name: fraud-detection-results
           path: artifacts/
           if-no-files-found: warn
+          retention-days: 7
 
       - name: Upload validated ML artifacts
         uses: actions/upload-artifact@v4
@@ -60,12 +63,10 @@ jobs:
       - name: Package ML prediction application
         run: |
           mkdir -p release_bundle/artifacts
-
           cp app.py release_bundle/
           cp requirements.txt release_bundle/
-          cp release/README.md release_bundle/README.md
+          cp README.md release_bundle/README.md
           cp artifacts/fraud_detection_model.pkl release_bundle/artifacts/
-
           cd release_bundle
           zip -r ../creditcard-fraud-release.zip .
           cd ..
