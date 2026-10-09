@@ -1,3 +1,4 @@
+
 name: Credit Card Fraud Detection ML CI
 
 on:
@@ -13,6 +14,7 @@ permissions:
 jobs:
   train-and-test:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -32,6 +34,9 @@ jobs:
 
       - name: Train and evaluate model
         run: python train_model.py
+
+      - name: Check ML quality gate
+        run: python quality_gate.py
 
       - name: Run automated ML tests
         run: python -m unittest discover -v
