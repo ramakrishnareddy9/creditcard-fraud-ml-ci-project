@@ -53,3 +53,46 @@ A stratified 80/20 train/test split is used with a fixed random seed. The pipeli
 
 ## Important interpretation
 A successful CI run only confirms that the pipeline and tests execute. It does not prove the model is production-ready. Fraud detection should prioritize fraud-class recall and precision-recall performance, and model thresholds should be selected based on business costs and validation data.
+
+
+# Credit Card Fraud Detection — Release Package
+
+## Contents
+
+- `app.py`: Flask prediction API
+- `fraud_detection_model.pkl`: Trained model
+- `requirements.txt`: Python dependencies
+
+## Run locally
+
+Install Python 3.11 or a compatible Python version.
+
+Install dependencies:
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+Ensure the trained model is available at:
+
+`artifacts/fraud_detection_model.pkl`
+
+Start the API:
+
+```bash
+python app.py
+```
+
+Health check:
+
+`GET http://127.0.0.1:5000/health`
+
+Prediction endpoint:
+
+`POST http://127.0.0.1:5000/predict`
+
+Send a JSON object containing all 30 features under
+the `features` key. See the project README for an example.
+
+This package is intended for practical demonstration
+and local testing, not production financial decisions.

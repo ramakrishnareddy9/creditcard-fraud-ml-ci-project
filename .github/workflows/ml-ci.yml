@@ -56,3 +56,24 @@ jobs:
           path: artifacts/
           if-no-files-found: error
           retention-days: 7
+
+      - name: Package ML prediction application
+        run: |
+          mkdir -p release_bundle/artifacts
+
+          cp app.py release_bundle/
+          cp requirements.txt release_bundle/
+          cp release/README.md release_bundle/README.md
+          cp artifacts/fraud_detection_model.pkl release_bundle/artifacts/
+
+          cd release_bundle
+          zip -r ../creditcard-fraud-release.zip .
+          cd ..
+
+      - name: Upload release package
+        uses: actions/upload-artifact@v4
+        with:
+          name: creditcard-fraud-release
+          path: creditcard-fraud-release.zip
+          if-no-files-found: error
+          retention-days: 7
