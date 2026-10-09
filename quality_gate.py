@@ -3,7 +3,7 @@ import json
 import sys
 from pathlib import Path
 
-MINIMUM_ACCURACY = 0.85
+MINIMUM_ACCURACY = 0.99
 METRICS_FILE = Path("artifacts/metrics.json")
 
 
