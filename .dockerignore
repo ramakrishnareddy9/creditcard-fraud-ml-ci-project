@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.git/
+.github/
+.venv/
+venv/
+test_*.py
+data/
+release_bundle/
+creditcard-fraud-release.zip
