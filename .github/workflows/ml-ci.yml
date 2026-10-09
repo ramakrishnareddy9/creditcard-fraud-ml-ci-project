@@ -1,3 +1,4 @@
+
 name: Credit Card Fraud Detection ML CI
 
 on:
@@ -78,3 +79,88 @@ jobs:
           path: creditcard-fraud-release.zip
           if-no-files-found: error
           retention-days: 7
+
+  docker-validation:
+    name: Build and Test Docker Container
+    runs-on: ubuntu-latest
+    needs: train-and-test
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download validated model artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: creditcard-fraud-ml-artifacts
+          path: artifacts/
+
+      - name: Build Docker image
+        run: docker build -t creditcard-fraud-ml:${{ github.sha }} .
+
+      - name: Start Docker container
+        run: |
+          docker run -d \
+            --name creditcard-fraud-container \
+            -p 5000:5000 \
+            creditcard-fraud-ml:${{ github.sha }}
+
+      - name: Wait for API health check
+        run: |
+          for i in $(seq 1 30); do
+            if curl --fail --silent http://localhost:5000/health \
+              -o health-response.json; then
+              cat health-response.json
+              python -c "import json; d=json.load(open('health-response.json')); assert d.get('status') == 'healthy' and d.get('model_loaded') is True, d"
+              exit 0
+            fi
+            echo "Waiting for API... attempt $i/30"
+            sleep 2
+          done
+
+          echo "API health check failed"
+          exit 1
+
+      - name: Test prediction endpoint
+        run: |
+          python - <<'PY'
+          import json
+
+          features = {"Time": 0, "Amount": 100}
+          features.update({f"V{i}": 0 for i in range(1, 29)})
+
+          with open("prediction-request.json", "w") as f:
+              json.dump({"features": features}, f)
+          PY
+
+          curl --fail --silent --show-error \
+            -X POST http://localhost:5000/predict \
+            -H "Content-Type: application/json" \
+            -d @prediction-request.json \
+            -o prediction-response.json
+
+          cat prediction-response.json
+
+          python - <<'PY'
+          import json
+
+          with open("prediction-response.json") as f:
+              result = json.load(f)
+
+          assert "prediction" in result, result
+          assert "label" in result, result
+          assert "fraud_probability" in result, result
+          assert 0 <= float(result["fraud_probability"]) <= 1, result
+
+          print("Docker prediction API validation passed.")
+          PY
+
+      - name: Show container logs
+        if: always()
+        run: docker logs creditcard-fraud-container || true
+
+      - name: Stop and remove container
+        if: always()
+        run: |
+          docker stop creditcard-fraud-container || true
+          docker rm creditcard-fraud-container || true
