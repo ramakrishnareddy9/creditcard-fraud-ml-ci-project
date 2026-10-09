@@ -48,3 +48,11 @@ jobs:
           name: fraud-detection-results
           path: artifacts/
           if-no-files-found: warn
+
+      - name: Upload validated ML artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: creditcard-fraud-ml-artifacts
+          path: artifacts/
+          if-no-files-found: error
+          retention-days: 7
