@@ -1,0 +1,112 @@
+
+name: Fraud Detection - Kubernetes CI/CD
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ramakrishnareddy9/creditcard-fraud-ml-ci-project
+
+jobs:
+  build-test-push:
+    runs-on: ubuntu-latest
+    outputs:
+      image_ref: ${{ steps.image.outputs.image_ref }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create immutable image reference
+        id: image
+        run: |
+          echo "image_ref=${REGISTRY}/${IMAGE_NAME}:sha-${GITHUB_SHA}" >> "$GITHUB_OUTPUT"
+
+      - name: Build Docker image
+        run: docker build -t fraud-api:test .
+
+      - name: Start test container
+        run: |
+          docker run -d --name fraud-api-test \
+            -p 5000:5000 fraud-api:test
+
+      - name: Test health endpoint
+        run: |
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:5000/health; then
+              echo "Health check passed"
+              exit 0
+            fi
+            sleep 2
+          done
+          docker logs fraud-api-test
+          exit 1
+
+      - name: Run automated tests
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pytest -q
+
+      - name: Clean up test container
+        if: always()
+        run: docker rm -f fraud-api-test || true
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Tag and publish tested image
+        run: |
+          docker tag fraud-api:test "${REGISTRY}/${IMAGE_NAME}:sha-${GITHUB_SHA}"
+          docker push "${REGISTRY}/${IMAGE_NAME}:sha-${GITHUB_SHA}"
+
+  deploy-kubernetes:
+    needs: build-test-push
+    runs-on: self-hosted
+
+    steps:
+      - name: Verify Kubernetes access
+        shell: powershell
+        run: |
+          kubectl config current-context
+          kubectl get nodes
+          kubectl get deployment fraud-detection-api
+
+      - name: Update Kubernetes Deployment
+        shell: powershell
+        run: |
+          $image = "${{ needs.build-test-push.outputs.image_ref }}"
+          kubectl set image deployment/fraud-detection-api fraud-api=$image
+
+      - name: Wait for rollout
+        shell: powershell
+        run: |
+          kubectl rollout status deployment/fraud-detection-api --timeout=180s
+
+      - name: Verify application health
+        shell: powershell
+        run: |
+          kubectl exec deployment/fraud-detection-api -- python -c "import urllib.request; print(urllib.request.urlopen('http://127.0.0.1:5000/health', timeout=10).read().decode())"
+
+      - name: Show deployment status
+        if: always()
+        shell: powershell
+        run: |
+          kubectl get deployment fraud-detection-api -o wide
+          kubectl get pods -o wide
+
+      - name: Roll back if deployment fails
+        if: failure()
+        shell: powershell
+        run: |
+          kubectl rollout undo deployment/fraud-detection-api
+          kubectl rollout status deployment/fraud-detection-api --timeout=180s
