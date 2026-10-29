@@ -1,0 +1,229 @@
+{
+  "method": "two-sample Kolmogorov-Smirnov test",
+  "p_value_threshold": 0.05,
+  "min_drifted_features": 2,
+  "drifted_feature_count": 6,
+  "drifted_features": [
+    "V1",
+    "V2",
+    "V3",
+    "V15",
+    "V27",
+    "Amount"
+  ],
+  "overall_drift": true,
+  "reference_file": "reference_data.csv",
+  "current_file": "current_data.csv",
+  "features": {
+    "Time": {
+      "ks_statistic": 0.032391,
+      "p_value": 0.65942313,
+      "drift_detected": false,
+      "reference_mean": 94813.859575,
+      "current_mean": 92932.344645
+    },
+    "V1": {
+      "ks_statistic": 0.862831,
+      "p_value": 0.0,
+      "drift_detected": true,
+      "reference_mean": 0.0,
+      "current_mean": 3.910677
+    },
+    "V2": {
+      "ks_statistic": 0.871801,
+      "p_value": 0.0,
+      "drift_detected": true,
+      "reference_mean": 0.0,
+      "current_mean": 3.234063
+    },
+    "V3": {
+      "ks_statistic": 0.73673,
+      "p_value": 0.0,
+      "drift_detected": true,
+      "reference_mean": -0.0,
+      "current_mean": 2.966997
+    },
+    "V4": {
+      "ks_statistic": 0.04898,
+      "p_value": 0.17645371,
+      "drift_detected": false,
+      "reference_mean": 0.0,
+      "current_mean": -0.030402
+    },
+    "V5": {
+      "ks_statistic": 0.026596,
+      "p_value": 0.8624621,
+      "drift_detected": false,
+      "reference_mean": 0.0,
+      "current_mean": -0.032732
+    },
+    "V6": {
+      "ks_statistic": 0.043323,
+      "p_value": 0.29756942,
+      "drift_detected": false,
+      "reference_mean": 0.0,
+      "current_mean": -0.035434
+    },
+    "V7": {
+      "ks_statistic": 0.034408,
+      "p_value": 0.58371345,
+      "drift_detected": false,
+      "reference_mean": -0.0,
+      "current_mean": -0.035293
+    },
+    "V8": {
+      "ks_statistic": 0.026824,
+      "p_value": 0.85561825,
+      "drift_detected": false,
+      "reference_mean": 0.0,
+      "current_mean": 0.02596
+    },
+    "V9": {
+      "ks_statistic": 0.020475,
+      "p_value": 0.9822474,
+      "drift_detected": false,
+      "reference_mean": -0.0,
+      "current_mean": -0.014101
+    },
+    "V10": {
+      "ks_statistic": 0.052175,
+      "p_value": 0.12756962,
+      "drift_detected": false,
+      "reference_mean": 0.0,
+      "current_mean": -0.023945
+    },
+    "V11": {
+      "ks_statistic": 0.023182,
+      "p_value": 0.94561792,
+      "drift_detected": false,
+      "reference_mean": 0.0,
+      "current_mean": 0.011668
+    },
+    "V12": {
+      "ks_statistic": 0.03094,
+      "p_value": 0.71384615,
+      "drift_detected": false,
+      "reference_mean": -0.0,
+      "current_mean": -0.057025
+    },
+    "V13": {
+      "ks_statistic": 0.052573,
+      "p_value": 0.12232806,
+      "drift_detected": false,
+      "reference_mean": 0.0,
+      "current_mean": -0.011542
+    },
+    "V14": {
+      "ks_statistic": 0.03801,
+      "p_value": 0.45558135,
+      "drift_detected": false,
+      "reference_mean": 0.0,
+      "current_mean": -0.027569
+    },
+    "V15": {
+      "ks_statistic": 0.061609,
+      "p_value": 0.04339077,
+      "drift_detected": true,
+      "reference_mean": 0.0,
+      "current_mean": 0.089371
+    },
+    "V16": {
+      "ks_statistic": 0.0404,
+      "p_value": 0.37925945,
+      "drift_detected": false,
+      "reference_mean": 0.0,
+      "current_mean": 0.009673
+    },
+    "V17": {
+      "ks_statistic": 0.03477,
+      "p_value": 0.57033229,
+      "drift_detected": false,
+      "reference_mean": -0.0,
+      "current_mean": 0.003737
+    },
+    "V18": {
+      "ks_statistic": 0.046071,
+      "p_value": 0.23281278,
+      "drift_detected": false,
+      "reference_mean": 0.0,
+      "current_mean": 0.027497
+    },
+    "V19": {
+      "ks_statistic": 0.035487,
+      "p_value": 0.54405823,
+      "drift_detected": false,
+      "reference_mean": 0.0,
+      "current_mean": 0.058276
+    },
+    "V20": {
+      "ks_statistic": 0.040485,
+      "p_value": 0.37671556,
+      "drift_detected": false,
+      "reference_mean": 0.0,
+      "current_mean": -0.033497
+    },
+    "V21": {
+      "ks_statistic": 0.04485,
+      "p_value": 0.26016618,
+      "drift_detected": false,
+      "reference_mean": 0.0,
+      "current_mean": -0.009859
+    },
+    "V22": {
+      "ks_statistic": 0.047647,
+      "p_value": 0.20079587,
+      "drift_detected": false,
+      "reference_mean": -0.0,
+      "current_mean": -0.05973
+    },
+    "V23": {
+      "ks_statistic": 0.032769,
+      "p_value": 0.64518935,
+      "drift_detected": false,
+      "reference_mean": 0.0,
+      "current_mean": -0.007423
+    },
+    "V24": {
+      "ks_statistic": 0.032583,
+      "p_value": 0.65219292,
+      "drift_detected": false,
+      "reference_mean": 0.0,
+      "current_mean": -0.018254
+    },
+    "V25": {
+      "ks_statistic": 0.055441,
+      "p_value": 0.08961269,
+      "drift_detected": false,
+      "reference_mean": 0.0,
+      "current_mean": 0.034032
+    },
+    "V26": {
+      "ks_statistic": 0.023921,
+      "p_value": 0.93102714,
+      "drift_detected": false,
+      "reference_mean": 0.0,
+      "current_mean": 0.007466
+    },
+    "V27": {
+      "ks_statistic": 0.066071,
+      "p_value": 0.02448032,
+      "drift_detected": true,
+      "reference_mean": -0.0,
+      "current_mean": -0.005781
+    },
+    "V28": {
+      "ks_statistic": 0.023243,
+      "p_value": 0.94450087,
+      "drift_detected": false,
+      "reference_mean": -0.0,
+      "current_mean": -0.008327
+    },
+    "Amount": {
+      "ks_statistic": 0.966142,
+      "p_value": 0.0,
+      "drift_detected": true,
+      "reference_mean": 88.349619,
+      "current_mean": 588.908151
+    }
+  }
+}
